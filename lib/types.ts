@@ -5,7 +5,14 @@ export type Day =
   | "Th"
   | "F"
   | "S"
-  | "Su";
+  | "Su"
+  | "Sunday"
+  | "Monday"
+  | "Tuesday"
+  | "Wednesday"
+  | "Thursday"
+  | "Friday"
+  | "Saturday";
 
 export interface ScheduleBlock {
   day: Day;
@@ -14,7 +21,7 @@ export interface ScheduleBlock {
 }
 
 export interface Section {
-  id: number;
+  id: string | number;
   section: string;
   instructor: string;
   room: string;
@@ -22,7 +29,7 @@ export interface Section {
 }
 
 export interface Course {
-  id: number;
+  id: string | number;
   code: string;
   title: string;
   units: number;

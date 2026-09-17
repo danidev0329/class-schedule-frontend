@@ -1,14 +1,20 @@
 import type { Day, ScheduleBlock } from "./types";
 
 export function parseTime(time: string): number {
-  const match = /^(\d{1,2}):(\d{2})\s*(AM|PM)$/i.exec(time.trim());
-  if (!match) throw new Error(`Invalid time: ${time}`);
-  let hours = Number(match[1]);
-  const minutes = Number(match[2]);
-  const isPM = match[3].toUpperCase() === "PM";
-  if (isPM && hours < 12) hours += 12;
-  if (!isPM && hours === 12) hours = 0;
-  return hours * 60 + minutes;
+  const ampmMatch = /^(\d{1,2}):(\d{2})\s*(AM|PM)$/i.exec(time.trim());
+  if (ampmMatch) {
+    let hours = Number(ampmMatch[1]);
+    const minutes = Number(ampmMatch[2]);
+    const isPM = ampmMatch[3].toUpperCase() === "PM";
+    if (isPM && hours < 12) hours += 12;
+    if (!isPM && hours === 12) hours = 0;
+    return hours * 60 + minutes;
+  }
+  const militaryMatch = /^(\d{1,2}):(\d{2})$/.exec(time.trim());
+  if (militaryMatch) {
+    return Number(militaryMatch[1]) * 60 + Number(militaryMatch[2]);
+  }
+  throw new Error(`Invalid time: ${time}`);
 }
 
 export function formatTime(minutes: number): string {
@@ -21,22 +27,36 @@ export function formatTime(minutes: number): string {
 
 const DAY_ORDER: Record<string, number> = {
   M: 0,
+  Monday: 0,
   T: 1,
+  Tuesday: 1,
   W: 2,
+  Wednesday: 2,
   Th: 3,
+  Thursday: 3,
   F: 4,
+  Friday: 4,
   S: 5,
+  Saturday: 5,
   Su: 6,
+  Sunday: 6,
 };
 
 const DAY_NAMES: Record<string, string> = {
   M: "Mon",
+  Monday: "Mon",
   T: "Tue",
+  Tuesday: "Tue",
   W: "Wed",
+  Wednesday: "Wed",
   Th: "Thu",
+  Thursday: "Thu",
   F: "Fri",
+  Friday: "Fri",
   S: "Sat",
+  Saturday: "Sat",
   Su: "Sun",
+  Sunday: "Sun",
 };
 
 export function getDayIndex(day: string): number {

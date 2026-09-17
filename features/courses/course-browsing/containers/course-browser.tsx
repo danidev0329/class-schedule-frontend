@@ -18,13 +18,14 @@ import {
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { useSchedule } from "@/features/courses/hooks/use-schedule";
 import { courses } from "@/lib/data";
+import { getDayIndex } from "@/lib/schedule-utils";
 import type { Day } from "@/lib/types";
 
 type DayFilter = Day | "ALL";
 
 const DAYS: Day[] = ["M", "T", "W", "Th", "F", "S", "Su"];
 
-const DAY_LABELS: Record<Day, string> = {
+const DAY_LABELS: Record<string, string> = {
   M: "Mondays",
   T: "Tuesdays",
   W: "Wednesdays",
@@ -52,7 +53,7 @@ export function CourseBrowser() {
       DAYS.filter((day) =>
         courses.some((course) =>
           course.sections.some((section) =>
-            section.schedule.some((block) => block.day === day)
+            section.schedule.some((block) => getDayIndex(block.day) === getDayIndex(day))
           )
         )
       ),
@@ -72,7 +73,9 @@ export function CourseBrowser() {
       if (
         dayFilter !== "ALL" &&
         !course.sections.some((section) =>
-          section.schedule.some((block) => block.day === dayFilter)
+          section.schedule.some(
+            (block) => getDayIndex(block.day) === getDayIndex(dayFilter)
+          )
         )
       ) {
         return false;
@@ -208,7 +211,8 @@ export function CourseBrowser() {
                       ? course.sections
                       : course.sections.filter((section) =>
                           section.schedule.some(
-                            (block) => block.day === dayFilter
+                            (block) =>
+                              getDayIndex(block.day) === getDayIndex(dayFilter)
                           )
                         )
                   }

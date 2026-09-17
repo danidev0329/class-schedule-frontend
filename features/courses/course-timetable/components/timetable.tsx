@@ -13,24 +13,38 @@ import { useSchedule } from "@/features/courses/hooks/use-schedule";
 
 const WEEK_DAYS: Day[] = ["M", "T", "W", "Th", "F"];
 
-const DAY_SHORT_LABELS: Record<Day, string> = {
+const DAY_SHORT_LABELS: Record<string, string> = {
   M: "Mon",
+  Monday: "Mon",
   T: "Tue",
+  Tuesday: "Tue",
   W: "Wed",
+  Wednesday: "Wed",
   Th: "Thu",
+  Thursday: "Thu",
   F: "Fri",
+  Friday: "Fri",
   S: "Sat",
+  Saturday: "Sat",
   Su: "Sun",
+  Sunday: "Sun",
 };
 
-const DAY_LONG_LABELS: Record<Day, string> = {
+const DAY_LONG_LABELS: Record<string, string> = {
   M: "Monday",
+  Monday: "Monday",
   T: "Tuesday",
+  Tuesday: "Tuesday",
   W: "Wednesday",
+  Wednesday: "Wednesday",
   Th: "Thursday",
+  Thursday: "Thursday",
   F: "Friday",
+  Friday: "Friday",
   S: "Saturday",
+  Saturday: "Saturday",
   Su: "Sunday",
+  Sunday: "Sunday",
 };
 
 const PX_PER_MINUTE = 1.5;
@@ -48,6 +62,15 @@ const COURSE_COLORS = [
   "border-lime-500 bg-lime-100 text-lime-950",
   "border-orange-500 bg-orange-100 text-orange-950",
 ];
+
+function colorIndexFor(id: string | number): number {
+  const key = String(id);
+  let hash = 0;
+  for (let i = 0; i < key.length; i += 1) {
+    hash = (hash * 31 + key.charCodeAt(i)) >>> 0;
+  }
+  return hash % COURSE_COLORS.length;
+}
 
 function formatHourLabel(hour: number): string {
   const hour12 = hour % 12 === 0 ? 12 : hour % 12;
@@ -104,7 +127,7 @@ export function Timetable() {
         startMinute,
         startRow: FIRST_CONTENT_ROW,
       }),
-      color: COURSE_COLORS[record.courseId % COURSE_COLORS.length],
+      color: COURSE_COLORS[colorIndexFor(record.courseId)],
       record,
     }))
   );

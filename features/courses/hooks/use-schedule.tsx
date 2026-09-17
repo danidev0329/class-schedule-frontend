@@ -14,7 +14,7 @@ import { schedulesConflict } from "@/lib/schedule-utils";
 import type { Course, Section } from "@/lib/types";
 
 export interface SelectedSectionRecord {
-  courseId: number;
+  courseId: string | number;
   code: string;
   title: string;
   units: number;
@@ -26,9 +26,11 @@ interface ScheduleContextValue {
   count: number;
   totalUnits: number;
   selectSection: (course: Course, section: Section) => void;
-  removeSection: (courseId: number) => void;
-  isSelected: (sectionId: number) => boolean;
-  getSelectedSection: (courseId: number) => SelectedSectionRecord | undefined;
+  removeSection: (courseId: string | number) => void;
+  isSelected: (sectionId: string | number) => boolean;
+  getSelectedSection: (
+    courseId: string | number
+  ) => SelectedSectionRecord | undefined;
   getConflict: (
     course: Course,
     section: Section
@@ -44,7 +46,7 @@ interface ToastState {
 
 export function ScheduleProvider({ children }: { children: ReactNode }) {
   const [selectedSections, setSelectedSections] = useState<
-    Map<number, SelectedSectionRecord>
+    Map<string | number, SelectedSectionRecord>
   >(new Map());
   const [toast, setToast] = useState<ToastState | null>(null);
 
@@ -89,7 +91,7 @@ export function ScheduleProvider({ children }: { children: ReactNode }) {
   );
 
   const removeSection = useCallback(
-    (courseId: number) => {
+    (courseId: string | number) => {
       const existing = selectedSections.get(courseId);
       if (!existing) return;
       const next = new Map(selectedSections);
@@ -103,7 +105,7 @@ export function ScheduleProvider({ children }: { children: ReactNode }) {
   );
 
   const isSelected = useCallback(
-    (sectionId: number) => {
+    (sectionId: string | number) => {
       for (const record of selectedSections.values()) {
         if (record.section.id === sectionId) return true;
       }
@@ -113,7 +115,7 @@ export function ScheduleProvider({ children }: { children: ReactNode }) {
   );
 
   const getSelectedSection = useCallback(
-    (courseId: number) => selectedSections.get(courseId),
+    (courseId: string | number) => selectedSections.get(courseId),
     [selectedSections]
   );
 
