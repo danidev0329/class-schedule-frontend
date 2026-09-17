@@ -1,4 +1,4 @@
-import type { Day } from "./types";
+import type { Day, ScheduleBlock } from "./types";
 
 export function parseTime(time: string): number {
   const match = /^(\d{1,2}):(\d{2})\s*(AM|PM)$/i.exec(time.trim());
@@ -83,6 +83,23 @@ export function timeToGridLine(
   options: { startMinute: number; startRow: number }
 ): number {
   return options.startRow + (parseTime(time) - options.startMinute);
+}
+
+export function schedulesConflict(
+  a: ScheduleBlock[],
+  b: ScheduleBlock[]
+): boolean {
+  for (const blockA of a) {
+    const aStart = parseTime(blockA.startTime);
+    const aEnd = parseTime(blockA.endTime);
+    for (const blockB of b) {
+      if (blockA.day !== blockB.day) continue;
+      const bStart = parseTime(blockB.startTime);
+      const bEnd = parseTime(blockB.endTime);
+      if (aStart < bEnd && bStart < aEnd) return true;
+    }
+  }
+  return false;
 }
 
 export function getDayGridColumn(

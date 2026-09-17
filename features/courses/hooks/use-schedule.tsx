@@ -10,6 +10,7 @@ import {
   type ReactNode,
 } from "react";
 import { cn } from "cn";
+import { schedulesConflict } from "@/lib/schedule-utils";
 import type { Course, Section } from "@/lib/types";
 
 export interface SelectedSectionRecord {
@@ -28,6 +29,10 @@ interface ScheduleContextValue {
   removeSection: (courseId: number) => void;
   isSelected: (sectionId: number) => boolean;
   getSelectedSection: (courseId: number) => SelectedSectionRecord | undefined;
+  getConflict: (
+    course: Course,
+    section: Section
+  ) => SelectedSectionRecord | undefined;
 }
 
 const ScheduleContext = createContext<ScheduleContextValue | null>(null);
@@ -56,6 +61,15 @@ export function ScheduleProvider({ children }: { children: ReactNode }) {
   const selectSection = useCallback(
     (course: Course, section: Section) => {
       const previous = selectedSections.get(course.id);
+      for (const record of selectedSections.values()) {
+        if (record.courseId === course.id) continue;
+        if (schedulesConflict(record.section.schedule, section.schedule)) {
+          showToast(
+            `Time conflict with ${record.code} · Section ${record.section.section}`
+          );
+          return;
+        }
+      }
       const next = new Map(selectedSections);
       next.set(course.id, {
         courseId: course.id,
@@ -103,6 +117,19 @@ export function ScheduleProvider({ children }: { children: ReactNode }) {
     [selectedSections]
   );
 
+  const getConflict = useCallback(
+    (course: Course, section: Section): SelectedSectionRecord | undefined => {
+      for (const record of selectedSections.values()) {
+        if (record.courseId === course.id) continue;
+        if (schedulesConflict(record.section.schedule, section.schedule)) {
+          return record;
+        }
+      }
+      return undefined;
+    },
+    [selectedSections]
+  );
+
   const selectedList = useMemo(
     () => Array.from(selectedSections.values()),
     [selectedSections]
@@ -122,6 +149,7 @@ export function ScheduleProvider({ children }: { children: ReactNode }) {
       removeSection,
       isSelected,
       getSelectedSection,
+      getConflict,
     }),
     [
       selectedList,
@@ -131,6 +159,7 @@ export function ScheduleProvider({ children }: { children: ReactNode }) {
       removeSection,
       isSelected,
       getSelectedSection,
+      getConflict,
     ]
   );
 

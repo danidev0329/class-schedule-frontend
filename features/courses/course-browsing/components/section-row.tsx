@@ -10,8 +10,10 @@ interface SectionRowProps {
 }
 
 export function SectionRow({ course, section }: SectionRowProps) {
-  const { isSelected, selectSection, removeSection } = useSchedule();
+  const { isSelected, selectSection, removeSection, getConflict } =
+    useSchedule();
   const selected = isSelected(section.id);
+  const conflict = getConflict(course, section);
 
   const handleToggle = () => {
     if (selected) {
@@ -45,11 +47,18 @@ export function SectionRow({ course, section }: SectionRowProps) {
             {scheduleParts.times} · {section.room}
           </span>
         </p>
+        {conflict && !selected && (
+          <p className="mt-1 text-xs font-medium text-red-600">
+            Time conflict with {conflict.code} · Section{" "}
+            {conflict.section.section}
+          </p>
+        )}
       </div>
       <Button
         variant={selected ? "default" : "outline"}
         size="sm"
         className="shrink-0"
+        disabled={Boolean(conflict) && !selected}
         onClick={handleToggle}
       >
         {selected ? "Selected" : "Select"}
