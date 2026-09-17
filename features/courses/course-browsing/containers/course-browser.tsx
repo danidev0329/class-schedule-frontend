@@ -1,10 +1,13 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { GraduationCap } from "lucide-react";
 import { CourseCard } from "@/features/courses/course-browsing/components/course-card";
 import { SchedulePanel } from "@/features/courses/course-timetable/components/schedule-panel";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
 import {
   Select,
   SelectContent,
@@ -113,16 +116,29 @@ export function CourseBrowser() {
 
   return (
     <main className="mx-auto flex h-dvh w-full max-w-8xl flex-col overflow-hidden px-10 py-6">
-      <div className="mb-4 shrink-0">
-        <h1 className="text-4xl font-bold">Coursify</h1>
-        <h1 className="text-2xl text-zinc-600">A simple and reliable course finder</h1>
-        <p className="mt-1 text-sm text-zinc-600">
-          {filteredCourses.length} courses · {selectedCount} sections selected
-          · {totalUnits} units
-        </p>
+      <div className="shrink-0">
+        <div className="flex items-center gap-3">
+          <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-zinc-900 text-white shadow-sm">
+            <GraduationCap className="h-6 w-6" aria-hidden />
+          </div>
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight text-zinc-900">
+              Coursify
+            </h1>
+            <p className="text-sm text-zinc-500">
+              A simple and reliable course finder
+            </p>
+          </div>
+        </div>
+        <div className="mt-4 flex flex-wrap items-center gap-2">
+          <Badge variant="secondary">{filteredCourses.length} courses</Badge>
+          <Badge variant="secondary">{selectedCount} sections selected</Badge>
+          <Badge variant="secondary">{totalUnits} units</Badge>
+        </div>
+        <Separator className="mt-5" />
       </div>
 
-      <div className="mb-6 flex shrink-0 flex-col gap-3 sm:flex-row sm:items-center">
+      <div className="mb-6 mt-6 flex shrink-0 flex-col gap-3 sm:flex-row sm:items-center">
         <Input
           type="search"
           placeholder="Search by code or title"
