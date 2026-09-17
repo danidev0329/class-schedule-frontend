@@ -114,7 +114,8 @@ export function CourseBrowser() {
   return (
     <main className="mx-auto flex h-dvh w-full max-w-8xl flex-col overflow-hidden px-10 py-6">
       <div className="mb-4 shrink-0">
-        <h1 className="text-2xl font-bold">A Simple Course Finder</h1>
+        <h1 className="text-4xl font-bold">Coursify</h1>
+        <h1 className="text-2xl text-zinc-600">A simple and reliable course finder</h1>
         <p className="mt-1 text-sm text-zinc-600">
           {filteredCourses.length} courses · {selectedCount} sections selected
           · {totalUnits} units
