@@ -1,15 +1,26 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useSchedule } from "@/hooks/use-schedule";
 import { formatSchedule } from "@/lib/schedule-utils";
-import type { Section } from "@/lib/types";
+import type { Course, Section } from "@/lib/types";
 
 interface SectionRowProps {
+  course: Course;
   section: Section;
-  selected: boolean;
-  onToggle: () => void;
 }
 
-export function SectionRow({ section, selected, onToggle }: SectionRowProps) {
+export function SectionRow({ course, section }: SectionRowProps) {
+  const { isSelected, selectSection, removeSection } = useSchedule();
+  const selected = isSelected(section.id);
+
+  const handleToggle = () => {
+    if (selected) {
+      removeSection(course.id);
+    } else {
+      selectSection(course, section);
+    }
+  };
+
   return (
     <div
       className={`flex items-center justify-between gap-3 rounded-lg border p-3 transition-colors ${
@@ -34,7 +45,7 @@ export function SectionRow({ section, selected, onToggle }: SectionRowProps) {
         variant={selected ? "default" : "outline"}
         size="sm"
         className="shrink-0"
-        onClick={onToggle}
+        onClick={handleToggle}
       >
         {selected ? "Selected" : "Select"}
       </Button>

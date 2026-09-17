@@ -2,10 +2,18 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { CourseCard } from "@/components/course-card";
+import { ScheduleSidebar } from "@/components/schedule-sidebar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Select } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
+import { useSchedule } from "@/hooks/use-schedule";
 import { courses } from "@/lib/data";
 import type { Day } from "@/lib/types";
 
@@ -24,10 +32,8 @@ const DAY_LABELS: Record<Day, string> = {
 };
 
 export default function Home() {
+  const { count: selectedCount } = useSchedule();
   const [loading, setLoading] = useState(true);
-  const [selectedSections, setSelectedSections] = useState<Set<number>>(
-    () => new Set()
-  );
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebouncedValue(search, 250);
   const [dayFilter, setDayFilter] = useState<DayFilter>("ALL");
@@ -71,18 +77,6 @@ export default function Home() {
     });
   }, [debouncedSearch, dayFilter]);
 
-  const toggleSection = (sectionId: number) => {
-    setSelectedSections((prev) => {
-      const next = new Set(prev);
-      if (next.has(sectionId)) {
-        next.delete(sectionId);
-      } else {
-        next.add(sectionId);
-      }
-      return next;
-    });
-  };
-
   const hasActiveFilters = search.trim() !== "" || dayFilter !== "ALL";
 
   const clearFilters = () => {
@@ -121,8 +115,7 @@ export default function Home() {
       <div className="mb-4">
         <h1 className="text-2xl font-bold">Courses</h1>
         <p className="mt-1 text-sm text-zinc-600">
-          {filteredCourses.length} courses · {selectedSections.size} sections
-          selected
+          {filteredCourses.length} courses · {selectedCount} sections selected
         </p>
       </div>
 
@@ -136,19 +129,20 @@ export default function Home() {
           className="sm:max-w-xs"
         />
         <Select
-          aria-label="Filter by day"
           value={dayFilter}
-          onChange={(event) =>
-            setDayFilter(event.target.value as DayFilter)
-          }
-          className="sm:w-48"
+          onValueChange={(value) => setDayFilter(value as DayFilter)}
         >
-          <option value="ALL">All days</option>
-          {availableDays.map((day) => (
-            <option key={day} value={day}>
-              {DAY_LABELS[day]}
-            </option>
-          ))}
+          <SelectTrigger aria-label="Filter by day" className="w-full sm:w-48">
+            <SelectValue placeholder="All days" />
+          </SelectTrigger>
+          <SelectContent align="start">
+            <SelectItem value="ALL">All days</SelectItem>
+            {availableDays.map((day) => (
+              <SelectItem key={day} value={day}>
+                {DAY_LABELS[day]}
+              </SelectItem>
+            ))}
+          </SelectContent>
         </Select>
         {hasActiveFilters && (
           <Button variant="outline" size="sm" onClick={clearFilters}>
@@ -157,35 +151,35 @@ export default function Home() {
         )}
       </div>
 
-      {filteredCourses.length === 0 ? (
-        <div className="flex flex-col items-center justify-center gap-1 rounded-lg border border-dashed py-16 text-center">
-          <p className="font-medium">No courses match your filters</p>
-          <p className="text-sm text-zinc-500">
-            Try a different search or day, or clear your filters.
-          </p>
-          {hasActiveFilters && (
-            <Button
-              variant="outline"
-              size="sm"
-              className="mt-3"
-              onClick={clearFilters}
-            >
-              Clear filters
-            </Button>
+      <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_18rem]">
+        <div className="min-w-0">
+          {filteredCourses.length === 0 ? (
+            <div className="flex flex-col items-center justify-center gap-1 rounded-lg border border-dashed py-16 text-center">
+              <p className="font-medium">No courses match your filters</p>
+              <p className="text-sm text-zinc-500">
+                Try a different search or day, or clear your filters.
+              </p>
+              {hasActiveFilters && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="mt-3"
+                  onClick={clearFilters}
+                >
+                  Clear filters
+                </Button>
+              )}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              {filteredCourses.map((course) => (
+                <CourseCard key={course.id} course={course} />
+              ))}
+            </div>
           )}
         </div>
-      ) : (
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          {filteredCourses.map((course) => (
-            <CourseCard
-              key={course.id}
-              course={course}
-              selectedSections={selectedSections}
-              onToggleSection={toggleSection}
-            />
-          ))}
-        </div>
-      )}
+        <ScheduleSidebar />
+      </div>
     </main>
   );
 }

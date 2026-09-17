@@ -10,15 +10,9 @@ import { SectionRow } from "@/components/section-row";
 
 interface CourseCardProps {
   course: Course;
-  selectedSections: Set<number>;
-  onToggleSection: (sectionId: number) => void;
 }
 
-export function CourseCard({
-  course,
-  selectedSections,
-  onToggleSection,
-}: CourseCardProps) {
+export function CourseCard({ course }: CourseCardProps) {
   return (
     <Card>
       <CardHeader>
@@ -32,12 +26,7 @@ export function CourseCard({
       </CardHeader>
       <CardContent className="space-y-2">
         {course.sections.map((section) => (
-          <SectionRow
-            key={section.id}
-            section={section}
-            selected={selectedSections.has(section.id)}
-            onToggle={() => onToggleSection(section.id)}
-          />
+          <SectionRow key={section.id} course={course} section={section} />
         ))}
       </CardContent>
     </Card>
