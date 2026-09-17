@@ -1,19 +1,75 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { CourseCard } from "@/components/course-card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
+import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { courses } from "@/lib/data";
+import type { Day } from "@/lib/types";
+
+type DayFilter = Day | "ALL";
+
+const DAYS: Day[] = ["M", "T", "W", "Th", "F", "S", "Su"];
+
+const DAY_LABELS: Record<Day, string> = {
+  M: "Mondays",
+  T: "Tuesdays",
+  W: "Wednesdays",
+  Th: "Thursdays",
+  F: "Fridays",
+  S: "Saturdays",
+  Su: "Sundays",
+};
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
   const [selectedSections, setSelectedSections] = useState<Set<number>>(
     () => new Set()
   );
+  const [search, setSearch] = useState("");
+  const debouncedSearch = useDebouncedValue(search, 250);
+  const [dayFilter, setDayFilter] = useState<DayFilter>("ALL");
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 800);
     return () => clearTimeout(timer);
   }, []);
+
+  const availableDays = useMemo(
+    () =>
+      DAYS.filter((day) =>
+        courses.some((course) =>
+          course.sections.some((section) =>
+            section.schedule.some((block) => block.day === day)
+          )
+        )
+      ),
+    []
+  );
+
+  const filteredCourses = useMemo(() => {
+    const query = debouncedSearch.trim().toLowerCase();
+    return courses.filter((course) => {
+      if (
+        query &&
+        !course.code.toLowerCase().includes(query) &&
+        !course.title.toLowerCase().includes(query)
+      ) {
+        return false;
+      }
+      if (
+        dayFilter !== "ALL" &&
+        !course.sections.some((section) =>
+          section.schedule.some((block) => block.day === dayFilter)
+        )
+      ) {
+        return false;
+      }
+      return true;
+    });
+  }, [debouncedSearch, dayFilter]);
 
   const toggleSection = (sectionId: number) => {
     setSelectedSections((prev) => {
@@ -25,6 +81,13 @@ export default function Home() {
       }
       return next;
     });
+  };
+
+  const hasActiveFilters = search.trim() !== "" || dayFilter !== "ALL";
+
+  const clearFilters = () => {
+    setSearch("");
+    setDayFilter("ALL");
   };
 
   if (loading) {
@@ -55,22 +118,74 @@ export default function Home() {
 
   return (
     <main className="mx-auto w-full max-w-6xl p-6">
-      <div className="mb-6">
+      <div className="mb-4">
         <h1 className="text-2xl font-bold">Courses</h1>
         <p className="mt-1 text-sm text-zinc-600">
-          {courses.length} courses · {selectedSections.size} sections selected
+          {filteredCourses.length} courses · {selectedSections.size} sections
+          selected
         </p>
       </div>
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        {courses.map((course) => (
-          <CourseCard
-            key={course.id}
-            course={course}
-            selectedSections={selectedSections}
-            onToggleSection={toggleSection}
-          />
-        ))}
+
+      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+        <Input
+          type="search"
+          placeholder="Search by code or title"
+          aria-label="Search courses"
+          value={search}
+          onChange={(event) => setSearch(event.target.value)}
+          className="sm:max-w-xs"
+        />
+        <Select
+          aria-label="Filter by day"
+          value={dayFilter}
+          onChange={(event) =>
+            setDayFilter(event.target.value as DayFilter)
+          }
+          className="sm:w-48"
+        >
+          <option value="ALL">All days</option>
+          {availableDays.map((day) => (
+            <option key={day} value={day}>
+              {DAY_LABELS[day]}
+            </option>
+          ))}
+        </Select>
+        {hasActiveFilters && (
+          <Button variant="outline" size="sm" onClick={clearFilters}>
+            Clear filters
+          </Button>
+        )}
       </div>
+
+      {filteredCourses.length === 0 ? (
+        <div className="flex flex-col items-center justify-center gap-1 rounded-lg border border-dashed py-16 text-center">
+          <p className="font-medium">No courses match your filters</p>
+          <p className="text-sm text-zinc-500">
+            Try a different search or day, or clear your filters.
+          </p>
+          {hasActiveFilters && (
+            <Button
+              variant="outline"
+              size="sm"
+              className="mt-3"
+              onClick={clearFilters}
+            >
+              Clear filters
+            </Button>
+          )}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          {filteredCourses.map((course) => (
+            <CourseCard
+              key={course.id}
+              course={course}
+              selectedSections={selectedSections}
+              onToggleSection={toggleSection}
+            />
+          ))}
+        </div>
+      )}
     </main>
   );
 }
