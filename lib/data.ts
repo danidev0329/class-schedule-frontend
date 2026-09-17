@@ -636,4 +636,50 @@ export const courses: Course[] = [
       },
     ],
   },
+  {
+    id: "CCPROG3",
+    code: "CCPROG3",
+    title: "Object-Oriented Programming",
+    units: 3,
+    sections: [
+      {
+        id: "CCPROG3-Y01",
+        section: "Y01",
+        instructor: "Juan Dela Cruz",
+        room: "G301",
+        schedule: [
+          { day: "Monday", startTime: "10:00", endTime: "11:30" },
+          { day: "Wednesday", startTime: "10:00", endTime: "11:30" },
+        ],
+      },
+      {
+        id: "CCPROG3-Y02",
+        section: "Y02",
+        instructor: "Maria Santos",
+        room: "G305",
+        schedule: [
+          { day: "Tuesday", startTime: "13:00", endTime: "14:30" },
+          { day: "Thursday", startTime: "13:00", endTime: "14:30" },
+        ],
+      },
+    ],
+  },
+  {
+    id: "CSMODEL",
+    code: "CSMODEL",
+    title: "Mathematical Modeling",
+    units: 3,
+    sections: [
+      {
+        id: "CSMODEL-Y01",
+        section: "Y01",
+        instructor: "Pedro Reyes",
+        room: "G201",
+        schedule: [
+          { day: "Monday", startTime: "11:00", endTime: "12:30" },
+          { day: "Wednesday", startTime: "11:00", endTime: "12:30" },
+        ],
+      },
+    ],
+  },
 ];
