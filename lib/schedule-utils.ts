@@ -30,3 +30,9 @@ const DAY_ORDER: Record<string, number> = {
 export function getDayIndex(day: string): number {
   return DAY_ORDER[day] ?? -1;
 }
+
+export function formatSchedule(
+  schedule: { day: string; startTime: string; endTime: string }[]
+): string {
+  return schedule.map((b) => `${b.day} ${formatTime(parseTime(b.startTime))} - ${formatTime(parseTime(b.endTime))}`).join(", ");
+}
