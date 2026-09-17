@@ -6,7 +6,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import type { Course } from "@/lib/types";
-import { SectionRow } from "@/components/section-row";
+import { SectionRow } from "@/features/courses/course-browsing/components/section-row";
 
 interface CourseCardProps {
   course: Course;

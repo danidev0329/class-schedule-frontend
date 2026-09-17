@@ -2,27 +2,45 @@
 
 ```
 class-schedule-frontend/
-├── app/                        # Next.js App Router (pages & layouts)
+├── app/                        # Next.js App Router — routing only
 │   ├── favicon.ico
 │   ├── globals.css
-│   ├── layout.tsx             # Root layout
-│   └── page.tsx               # Browse page (course grid)
-├── components/                 # Reusable UI components
-│   ├── course-card.tsx         # Course card with sections
-│   ├── section-row.tsx         # Section row w/ select toggle
-│   └── ui/                    # shadcn/ui components (download via npx shadcn)
+│   ├── layout.tsx             # Root layout (providers, fonts)
+│   └── page.tsx               # Thin route → renders CourseBrowser
+├── components/
+│   └── ui/                    # shadcn/ui primitives (Button, Card, Input, Select, Badge)
+├── features/
+│   └── courses/
+│       ├── hooks/                 # Cross-feature hooks
+│       │   └── use-schedule.tsx   # Shared selection context + provider (Map<courseId, section>)
+│       ├── course-browsing/       # Browse view
+│       │   ├── components/
+│       │   │   ├── course-card.tsx
+│       │   │   └── section-row.tsx
+│       │   ├── containers/
+│       │   │   └── course-browser.tsx   # Search/filter + grid + sidebar layout
+│       │   ├── hooks/
+│       │   ├── types/
+│       │   └── utils/
+│       └── course-timetable/      # Schedule view
+│           ├── components/
+│           │   └── schedule-sidebar.tsx  # Chosen-sections panel w/ remove
+│           ├── containers/
+│           ├── hooks/
+│           ├── types/
+│           └── utils/
+├── hooks/                       # Generic reusable hooks
+│   └── use-debounced-value.ts
 ├── lib/                        # Types, data & helpers
+│   ├── cn.ts
 │   ├── data.ts                 # Mock course dataset
 │   ├── schedule-utils.ts       # parseTime, formatTime, getDayIndex, formatSchedule
-│   └── types.ts                # Course, Section, ScheduleBlock, Day
+│   ├── types.ts                # Course, Section, ScheduleBlock, Day
+│   └── utils.ts                # cn (shadcn)
 ├── public/                     # Static assets
-│   ├── file.svg
-│   ├── globe.svg
-│   ├── next.svg
-│   ├── vercel.svg
-│   └── window.svg
-├── AGENTS.md                   # Next.js agent rules
-├── CLAUDE.md                   # Claude agent rules
+├── AGENTS.md
+├── CLAUDE.md
+├── components.json
 ├── eslint.config.mjs
 ├── next-env.d.ts
 ├── next.config.ts
@@ -34,4 +52,4 @@ class-schedule-frontend/
 └── tsconfig.json
 ```
 
-> Notes: `data/`, `features/`, and `hooks/` directories exist but are currently empty.
+> `data/`, `features/courses/{course-browsing,course-timetable}/{hooks,types,utils}` are scaffolded but currently unused.

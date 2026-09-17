@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { useSchedule } from "@/hooks/use-schedule";
+import { useSchedule } from "@/features/courses/hooks/use-schedule";
 import { formatSchedule } from "@/lib/schedule-utils";
 import type { Course, Section } from "@/lib/types";
 
