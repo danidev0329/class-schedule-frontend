@@ -112,8 +112,8 @@ export function CourseBrowser() {
   }
 
   return (
-    <main className="mx-auto w-full max-w-8xl px-10 py-6">
-      <div className="mb-4">
+    <main className="mx-auto flex h-dvh w-full max-w-8xl flex-col overflow-hidden px-10 py-6">
+      <div className="mb-4 shrink-0">
         <h1 className="text-2xl font-bold">A Simple Course Finder</h1>
         <p className="mt-1 text-sm text-zinc-600">
           {filteredCourses.length} courses · {selectedCount} sections selected
@@ -121,7 +121,7 @@ export function CourseBrowser() {
         </p>
       </div>
 
-      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+      <div className="mb-6 flex shrink-0 flex-col gap-3 sm:flex-row sm:items-center">
         <Input
           type="search"
           placeholder="Search by code or title"
@@ -161,8 +161,8 @@ export function CourseBrowser() {
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 items-start gap-6 md:gap-8 lg:grid-cols-[20rem_minmax(0,1fr)]">
-        <div className="min-w-0">
+      <div className="grid min-h-0 flex-1 grid-cols-1 gap-6 md:gap-8 lg:grid-cols-[20rem_minmax(0,1fr)]">
+        <div className="min-h-0 min-w-0 overflow-y-auto">
           {filteredCourses.length === 0 ? (
             <div className="flex flex-col items-center justify-center gap-1 rounded-lg border border-dashed py-16 text-center">
               <p className="font-medium">No courses match your filters</p>

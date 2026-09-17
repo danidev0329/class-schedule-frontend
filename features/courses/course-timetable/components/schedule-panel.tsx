@@ -23,7 +23,7 @@ export function SchedulePanel({ open, onClose }: SchedulePanelProps) {
         <CardHeader>
           <div className="flex items-start justify-between gap-2">
             <div>
-              <CardTitle>My schedule</CardTitle>
+              <CardTitle>Registered Courses</CardTitle>
               <p className="text-sm text-muted-foreground">
                 {count} section{count === 1 ? "" : "s"} · {totalUnits} units
               </p>
@@ -60,7 +60,7 @@ export function SchedulePanel({ open, onClose }: SchedulePanelProps) {
       <aside
         aria-label="My schedule"
         className={cn(
-          "fixed inset-y-0 right-0 z-50 flex w-[92vw] max-w-md flex-col overflow-y-auto bg-background p-4 shadow-xl transition-transform duration-300 sm:w-96 lg:static lg:z-auto lg:w-full lg:max-w-none lg:translate-x-0 lg:overflow-visible lg:bg-transparent lg:p-0 lg:shadow-none",
+          "fixed inset-y-0 right-0 z-50 flex w-[92vw] max-w-md flex-col overflow-y-auto bg-background p-4 shadow-xl transition-transform duration-300 sm:w-96 lg:static lg:z-auto lg:w-full lg:max-w-none lg:translate-x-0 lg:min-h-0 lg:overflow-y-auto lg:bg-transparent lg:p-0 lg:shadow-none",
           open ? "translate-x-0" : "translate-x-full"
         )}
       >
