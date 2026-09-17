@@ -200,7 +200,19 @@ export function CourseBrowser() {
           ) : (
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-1">
               {filteredCourses.map((course) => (
-                <CourseCard key={course.id} course={course} />
+                <CourseCard
+                  key={course.id}
+                  course={course}
+                  sections={
+                    dayFilter === "ALL"
+                      ? course.sections
+                      : course.sections.filter((section) =>
+                          section.schedule.some(
+                            (block) => block.day === dayFilter
+                          )
+                        )
+                  }
+                />
               ))}
             </div>
           )}

@@ -5,14 +5,18 @@ import { ChevronDown } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { cn } from "cn";
-import type { Course } from "@/lib/types";
+import type { Course, Section } from "@/lib/types";
 import { SectionRow } from "@/features/courses/course-browsing/components/section-row";
 
 interface CourseCardProps {
   course: Course;
+  sections?: Section[];
 }
 
-export function CourseCard({ course }: CourseCardProps) {
+export function CourseCard({
+  course,
+  sections = course.sections,
+}: CourseCardProps) {
   const [expanded, setExpanded] = useState(true);
 
   return (
@@ -50,7 +54,7 @@ export function CourseCard({ course }: CourseCardProps) {
       >
         <div className="min-h-0 overflow-hidden">
           <CardContent className="space-y-2">
-            {course.sections.map((section) => (
+            {sections.map((section) => (
               <SectionRow key={section.id} course={course} section={section} />
             ))}
           </CardContent>
