@@ -16,12 +16,14 @@ export interface SelectedSectionRecord {
   courseId: number;
   code: string;
   title: string;
+  units: number;
   section: Section;
 }
 
 interface ScheduleContextValue {
   selectedSections: SelectedSectionRecord[];
   count: number;
+  totalUnits: number;
   selectSection: (course: Course, section: Section) => void;
   removeSection: (courseId: number) => void;
   isSelected: (sectionId: number) => boolean;
@@ -59,6 +61,7 @@ export function ScheduleProvider({ children }: { children: ReactNode }) {
         courseId: course.id,
         code: course.code,
         title: course.title,
+        units: course.units,
         section,
       });
       setSelectedSections(next);
@@ -105,10 +108,16 @@ export function ScheduleProvider({ children }: { children: ReactNode }) {
     [selectedSections]
   );
 
+  const totalUnits = useMemo(
+    () => selectedList.reduce((sum, record) => sum + record.units, 0),
+    [selectedList]
+  );
+
   const value = useMemo<ScheduleContextValue>(
     () => ({
       selectedSections: selectedList,
       count: selectedSections.size,
+      totalUnits,
       selectSection,
       removeSection,
       isSelected,
@@ -117,6 +126,7 @@ export function ScheduleProvider({ children }: { children: ReactNode }) {
     [
       selectedList,
       selectedSections.size,
+      totalUnits,
       selectSection,
       removeSection,
       isSelected,

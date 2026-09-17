@@ -2,8 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { CourseCard } from "@/features/courses/course-browsing/components/course-card";
-import { ScheduleSidebar } from "@/features/courses/course-timetable/components/schedule-sidebar";
-import { Timetable } from "@/features/courses/course-timetable/components/timetable";
+import { SchedulePanel } from "@/features/courses/course-timetable/components/schedule-panel";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -33,11 +32,12 @@ const DAY_LABELS: Record<Day, string> = {
 };
 
 export function CourseBrowser() {
-  const { count: selectedCount } = useSchedule();
+  const { count: selectedCount, totalUnits } = useSchedule();
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebouncedValue(search, 250);
   const [dayFilter, setDayFilter] = useState<DayFilter>("ALL");
+  const [scheduleOpen, setScheduleOpen] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 800);
@@ -112,11 +112,12 @@ export function CourseBrowser() {
   }
 
   return (
-    <main className="mx-auto w-full max-w-6xl p-6">
+    <main className="mx-auto w-full max-w-8xl px-10 py-6">
       <div className="mb-4">
-        <h1 className="text-2xl font-bold">Courses</h1>
+        <h1 className="text-2xl font-bold">A Simple Course Finder</h1>
         <p className="mt-1 text-sm text-zinc-600">
           {filteredCourses.length} courses · {selectedCount} sections selected
+          · {totalUnits} units
         </p>
       </div>
 
@@ -150,9 +151,17 @@ export function CourseBrowser() {
             Clear filters
           </Button>
         )}
+        <Button
+          variant="outline"
+          size="sm"
+          className="lg:hidden"
+          onClick={() => setScheduleOpen(true)}
+        >
+          Schedule ({selectedCount})
+        </Button>
       </div>
 
-      <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_18rem]">
+      <div className="grid grid-cols-1 items-start gap-6 md:gap-8 lg:grid-cols-[20rem_minmax(0,1fr)]">
         <div className="min-w-0">
           {filteredCourses.length === 0 ? (
             <div className="flex flex-col items-center justify-center gap-1 rounded-lg border border-dashed py-16 text-center">
@@ -172,20 +181,18 @@ export function CourseBrowser() {
               )}
             </div>
           ) : (
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-1">
               {filteredCourses.map((course) => (
                 <CourseCard key={course.id} course={course} />
               ))}
             </div>
           )}
         </div>
-        <ScheduleSidebar />
+        <SchedulePanel
+          open={scheduleOpen}
+          onClose={() => setScheduleOpen(false)}
+        />
       </div>
-
-      <section className="mt-8">
-        <h2 className="mb-3 text-lg font-bold">Weekly timetable</h2>
-        <Timetable />
-      </section>
     </main>
   );
 }

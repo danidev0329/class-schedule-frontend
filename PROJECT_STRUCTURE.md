@@ -12,20 +12,21 @@ class-schedule-frontend/
 ├── features/
 │   └── courses/
 │       ├── hooks/                 # Cross-feature hooks
-│       │   └── use-schedule.tsx   # Shared selection context + provider (Map<courseId, section>)
+│       │   └── use-schedule.tsx   # Shared selection context + provider (Map<courseId, section>, totalUnits)
 │       ├── course-browsing/       # Browse view
 │       │   ├── components/
 │       │   │   ├── course-card.tsx
 │       │   │   └── section-row.tsx
 │       │   ├── containers/
-│       │   │   └── course-browser.tsx   # Search/filter + grid + sidebar layout
+│       │   │   └── course-browser.tsx   # Search/filter + grid + schedule panel layout
 │       │   ├── hooks/
 │       │   ├── types/
 │       │   └── utils/
 │       └── course-timetable/      # Schedule view
 │           ├── components/
-│           │   ├── schedule-sidebar.tsx  # Chosen-sections panel w/ remove
-│           │   └── timetable.tsx         # Weekly day × time grid of selected sections
+│           │   ├── schedule-panel.tsx     # Desktop sidebar column + mobile slide-over
+│           │   ├── schedule-sidebar.tsx   # Chosen-sections list w/ remove
+│           │   └── timetable.tsx          # Weekly day × time grid of selected sections
 │           ├── containers/
 │           ├── hooks/
 │           ├── types/
@@ -35,7 +36,7 @@ class-schedule-frontend/
 ├── lib/                        # Types, data & helpers
 │   ├── cn.ts
 │   ├── data.ts                 # Mock course dataset
-│   ├── schedule-utils.ts       # parseTime, formatTime, getDayIndex, formatSchedule
+│   ├── schedule-utils.ts       # parseTime, formatTime, getDayIndex, formatSchedule, timer/grid helpers
 │   ├── types.ts                # Course, Section, ScheduleBlock, Day
 │   └── utils.ts                # cn (shadcn)
 ├── public/                     # Static assets

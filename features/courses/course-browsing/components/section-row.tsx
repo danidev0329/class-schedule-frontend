@@ -1,7 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useSchedule } from "@/features/courses/hooks/use-schedule";
-import { formatSchedule } from "@/lib/schedule-utils";
+import { formatScheduleParts } from "@/lib/schedule-utils";
 import type { Course, Section } from "@/lib/types";
 
 interface SectionRowProps {
@@ -21,6 +21,8 @@ export function SectionRow({ course, section }: SectionRowProps) {
     }
   };
 
+  const scheduleParts = formatScheduleParts(section.schedule);
+
   return (
     <div
       className={`flex items-center justify-between gap-3 rounded-lg border p-3 transition-colors ${
@@ -37,8 +39,11 @@ export function SectionRow({ course, section }: SectionRowProps) {
           )}
         </div>
         <p className="truncate text-sm text-zinc-600">{section.instructor}</p>
-        <p className="truncate text-xs text-zinc-500">
-          {formatSchedule(section.schedule)} · {section.room}
+        <p className="text-xs text-zinc-500">
+          <span className="font-medium text-zinc-600">{scheduleParts.days}</span>
+          <span className="block">
+            {scheduleParts.times} · {section.room}
+          </span>
         </p>
       </div>
       <Button
