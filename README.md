@@ -1,6 +1,6 @@
 # Class Schedule Frontend
 
-A single-page course scheduler built with **Next.js 16 + React 19 + Tailwind CSS v4**. Browse courses, search/filter by code, title, or day of the week, select sections with instant timetable preview, and catch scheduling conflicts—all in the browser with zero backend calls.
+A single-page course scheduler built with **Next.js 16 + React 19 + Tailwind CSS v4**. Browse courses, search/filter by code, title, or day of the week, select sections with instant timetable preview, and catch scheduling conflicts all in the browser with zero backend calls.
 
 ---
 
