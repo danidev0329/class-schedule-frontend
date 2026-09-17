@@ -24,7 +24,8 @@ class-schedule-frontend/
 │       │   └── utils/
 │       └── course-timetable/      # Schedule view
 │           ├── components/
-│           │   └── schedule-sidebar.tsx  # Chosen-sections panel w/ remove
+│           │   ├── schedule-sidebar.tsx  # Chosen-sections panel w/ remove
+│           │   └── timetable.tsx         # Weekly day × time grid of selected sections
 │           ├── containers/
 │           ├── hooks/
 │           ├── types/

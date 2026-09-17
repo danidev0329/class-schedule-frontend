@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { CourseCard } from "@/features/courses/course-browsing/components/course-card";
 import { ScheduleSidebar } from "@/features/courses/course-timetable/components/schedule-sidebar";
+import { Timetable } from "@/features/courses/course-timetable/components/timetable";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -180,6 +181,11 @@ export function CourseBrowser() {
         </div>
         <ScheduleSidebar />
       </div>
+
+      <section className="mt-8">
+        <h2 className="mb-3 text-lg font-bold">Weekly timetable</h2>
+        <Timetable />
+      </section>
     </main>
   );
 }

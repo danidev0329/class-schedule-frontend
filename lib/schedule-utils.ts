@@ -1,3 +1,5 @@
+import type { Day } from "./types";
+
 export function parseTime(time: string): number {
   const match = /^(\d{1,2}):(\d{2})\s*(AM|PM)$/i.exec(time.trim());
   if (!match) throw new Error(`Invalid time: ${time}`);
@@ -35,4 +37,18 @@ export function formatSchedule(
   schedule: { day: string; startTime: string; endTime: string }[]
 ): string {
   return schedule.map((b) => `${b.day} ${formatTime(parseTime(b.startTime))} - ${formatTime(parseTime(b.endTime))}`).join(", ");
+}
+
+export function timeToGridLine(
+  time: string,
+  options: { startMinute: number; startRow: number }
+): number {
+  return options.startRow + (parseTime(time) - options.startMinute);
+}
+
+export function getDayGridColumn(
+  day: Day,
+  firstContentColumn = 2
+): number {
+  return getDayIndex(day) + firstContentColumn;
 }
